@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, BaseSettings, validator  # pylint:disable=no-name-in-module
+from pydantic import BaseModel, BaseSettings, Field, validator  # pylint:disable=no-name-in-module
 from enum import Enum
 from datetime import datetime
 from typing import Optional, List, Mapping, Hashable, Any
@@ -10,6 +10,7 @@ import re
 IS_SLUG_REGEX = r"^[A-Za-z0-9_]+$"
 IS_SLUG = re.compile(IS_SLUG_REGEX)
 ARTIFACT_FILENAME = 'data'
+ARTIFACT_DT_FMT = '%Y%m%dT%H%M%S'
 
 def _check_slug(v):
     if not IS_SLUG.match(v):
@@ -48,6 +49,7 @@ class Artifact(BaseModel):
     formats: List[Format]
     name: Optional[str] = None
     metadata: Optional[dict] = None
+    filename: str = ARTIFACT_FILENAME
 
     @validator('version') 
     def version_must_be_prefixed(cls, v):
@@ -60,9 +62,12 @@ class Artifact(BaseModel):
         return _check_slug(v)
 
     @validator('formats')
-    def must_have_one_or_more_formats(cls, v):
+    def formats_must_be_unique(cls, v):
         if len(v) < 1:
             raise ValueError('At least one format for artfiact must be specified')
+        names = [f.name for f in v]
+        if len(names) != len(set(names)):
+            raise ValueError(f'Formats must be unique by name (value={v})')
         return v
 
     @property
@@ -109,11 +114,64 @@ DEFAULT_STORAGE = Storage(slug='gcs', scheme='gs')
 
 EntryKey = namedtuple('EntryKey', ['source', 'storage', 'artifact', 'version', 'created'])
 
+def entry_key_str(key: EntryKey, date_format=ARTIFACT_DT_FMT):
+    key = key._asdict()
+    key['created'] = key['created'].strftime(date_format)
+    key = '\n'.join([f'{k}: {v}' for k, v in key.items()])
+    return "{\n" + key + "\n}"
+
+def resource_url(
+    source: Source, 
+    artifact: Artifact, 
+    storage: Storage, 
+    filename: str=None, 
+    format: str=None
+):
+    """Create URL for artifact resource
+
+    Examples
+    --------
+    >>> resource_url(source, artifact, storage, filename='data', format='parquet')
+    > "gs://public-data-source/catalog/clinvar/submission_summary/v2020-06/20200601T000000/data.parquet"
+
+    """
+    basename = (filename or artifact.filename) + '.' + \
+        (format or artifact.default_format.name)
+    timestamp = artifact.created.strftime(ARTIFACT_DT_FMT)
+    path = '/'.join([
+        source.slug,
+        artifact.slug,
+        artifact.version,
+        timestamp,
+        basename
+    ])
+    return storage.url(path)
+
 class Entry(BaseModel):
     """Catalog entry model"""
+    # pylint:disable=no-self-argument
     source: Source
     artifact: Artifact 
-    storage: Storage    
+    storage: Storage   
+    resources: Mapping[str, str] = None
+
+    # see: https://github.com/samuelcolvin/pydantic/issues/259
+    @validator('resources', pre=True, always=True)
+    def default_resources(cls, v, *, values, **kwargs):
+        if v is None:
+            v = {
+                f.name: resource_url(
+                    values['source'], 
+                    values['artifact'], 
+                    values['storage'],
+                    format=f.name
+                )
+                for f in values['artifact'].formats
+            }
+        for value in v.values():
+            if not value:
+                raise ValueError(f'Resource URLs cannot be empty (value={v})')
+        return v
 
     @property
     def key(self) -> EntryKey:
@@ -129,22 +187,6 @@ class Entry(BaseModel):
     def fs(self):
         import fsspec
         return fsspec.filesystem(self.storage.scheme)
-
-    def url(self, path: str=None) -> str:
-        if path is None:
-            path = ARTIFACT_FILENAME + '.' + self.artifact.default_format.name
-        timestamp = self.artifact.created.strftime('%Y%m%dT%H%M%S')
-        path = '/'.join([
-            p for p in [
-                self.source.slug,
-                self.artifact.slug,
-                self.artifact.version,
-                timestamp,
-                path
-            ] if p
-        ])
-        return self.storage.url(path)
-
 
 
 class Catalog(BaseModel):
