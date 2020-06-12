@@ -1,0 +1,6 @@
+pyarrow
+gcsfs==0.6.2
+pydantic==1.5.1
+python-dotenv==0.13.0
+fire==0.3.1
+prefect[viz]==0.11.2
