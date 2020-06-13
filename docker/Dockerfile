@@ -12,7 +12,10 @@ RUN conda install --yes --file /tmp/requirements.txt && \
 # TODO: switch to package install
 ENV PYTHONPATH="${PYTHONPATH}:$WORK_DIR/repos/public-data-source/src"
 
+# Ignore prefect warning from https://github.com/PrefectHQ/prefect/issues/2677
+ENV PYTHONWARNINGS="ignore::UserWarning:prefect.core.flow,$PYTHONWARNINGS"
+
 ENV GCS_PROJECT=target-ranking \
   GCS_BUCKET=public-data-source \
   GCS_ROOT=catalog \
-  CATALOG_PATH=$WORK_DIR/repos/public-data-source/catalog.py
+  CATALOG_PATH=$WORK_DIR/repos/public-data-source/catalog.yaml

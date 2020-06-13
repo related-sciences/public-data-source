@@ -1,0 +1,34 @@
+ARG BASE_CONTAINER=public-data-source
+FROM $BASE_CONTAINER
+
+# Jupyter lab extension installs
+# RUN jupyter labextension install @jupyterlab/toc
+# fix-permissions /home/$NB_USER ?
+
+USER root
+# VS code-server install
+RUN cd /opt \
+  && wget -q https://github.com/cdr/code-server/releases/download/3.2.0/code-server-3.2.0-linux-x86_64.tar.gz \
+  && tar -xf code-server-3.2.0-linux-x86_64.tar.gz \
+  && rm code-server-3.2.0-linux-x86_64.tar.gz \
+  && chmod a+x code-server-3.2.0-linux-x86_64/code-server \
+  && ln -s /opt/code-server-3.2.0-linux-x86_64/code-server /usr/local/bin/code-server \
+  && code-server --install-extension ms-python.python \
+  && code-server --install-extension njpwerner.autodocstring \
+  && code-server --install-extension bungcip.better-toml
+COPY dev.code-workspace $WORK_DIR/
+RUN mkdir $WORK_DIR/logs
+
+# Override cmd on entry at:
+# https://github.com/jupyter/docker-stacks/blob/master/base-notebook/Dockerfile#L130
+# ENTRYPOINT ["tini", "-g", "--"]
+# CMD ["start-notebook.sh"]
+COPY start-all.sh start-vscode.sh /usr/local/bin/
+
+# This is critical because code-server will write to
+# /home/jovyan/.local/share/code-server as root, and
+# alter permissions on /home/jovyan/.local/share/jupyter
+RUN fix-permissions "/home/${NB_USER}"
+USER $NB_UID
+
+CMD ["start-all.sh"]

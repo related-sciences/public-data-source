@@ -1,0 +1,10 @@
+{
+        "folders": [
+                {"path": "repos/target-ranking"},
+                {"path": "repos/private-data-source"},
+                {"path": "repos/public-data-source"},
+        ],
+        "settings": {
+            "autoDocstring.docstringFormat": "numpy"
+        }
+}
