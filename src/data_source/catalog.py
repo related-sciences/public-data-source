@@ -102,6 +102,7 @@ def create_entry(
     name: Optional[str] = None,
     created: Optional[datetime] = None,
     metadata: Optional[dict] = None,
+    properties: Optional[dict] = None,
     storage: Storage=DEFAULT_STORAGE
 ):
     """Create new catalog entry
@@ -145,6 +146,8 @@ def create_entry(
     metadata: Optional[dict]
         Artifact metadata commonly used to store schema strings or other
         informative but unstructured information
+    properties: Optional[dict]
+        Format properties such as compression, delimiters, partitions, etc.
     storage: Storage
         Destination for artifact data
 
@@ -177,7 +180,7 @@ def create_entry(
             version=version,
             created=created,
             metadata=metadata,
-            formats=[dict(name=format, type=type)]
+            formats=[dict(name=format, type=type, properties=properties)]
         ),
         storage=storage
     ))
