@@ -6,8 +6,8 @@ The typical flow for adding a new data source is:
 
 1. Add a folder to [`import`](import) for the new source
 2. Create a script that does the following:
-  - Download and repackage artifacts from scientific dbs into more portable, efficient formats
-  - Create a catalog entry that represents the artifact, e.g.
+    - Download and repackage artifacts from scientific dbs into more portable, efficient formats
+    - Create a catalog entry that represents the artifact, e.g.
       ```python
         from data_source import catalog
         entry = catalog.create_entry(
@@ -21,7 +21,7 @@ The typical flow for adding a new data source is:
         # This will add the entry to the default `catalog.yaml` file
         catalog.add_entry(entry)
       ```
-  - Upload optimized files to a remote file store, e.g.
+    - Upload optimized files to a remote file store, e.g.
       ```python
         url = entry.resources['parquet']
         # url = gs://public-data-source/catalog/clinvar/submission_summary/v2020-06/20200601T000000/data.parquet
