@@ -79,12 +79,12 @@ python clinvar.py flow - run
 Environment variables related to authentication and storage are managed in one of three ways:
 
 1. Secret variables (e.g. passwords and paths to key files) are not handled explicitly
-  - These should be managed by the user, e.g. by setting env vars when running containers
+    - These should be managed by the user, e.g. by setting env vars when running containers
 2. Public variables common to groups of code with the same privileges are set in `.env` files
-  - Bucket/project names are a good example of this
-  - For code using the same storage/authentication properties, a `.env` file should be loaded
+    - Bucket/project names are a good example of this
+    - For code using the same storage/authentication properties, a `.env` file should be loaded
     at the beginning of each process.
 3. Conflicting variables for code that needs settings from multiple environments should load the appropriate variables from `.env` files and set the corresponding properties explicitly on python objects
-  - An example of this would be any pipeline needing to access both private and public data
-  - Variable values don't need to come from `.env` files, but this makes it easier to
+    - An example of this would be any pipeline needing to access both private and public data
+    - Variable values don't need to come from `.env` files, but this makes it easier to
     keep code using both methods in sync
