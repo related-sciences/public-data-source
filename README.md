@@ -6,8 +6,8 @@ The typical flow for adding a new data source is:
 
 1. Add a folder to [`import`](import) for the new source
 2. Create a script that does the following:
-  - Download and repackage artifacts from scientific dbs into more portable, efficient formats
-  - Create a catalog entry that represents the artifact, e.g.
+    - Download and repackage artifacts from scientific dbs into more portable, efficient formats
+    - Create a catalog entry that represents the artifact, e.g.
       ```python
         from data_source import catalog
         entry = catalog.create_entry(
@@ -21,7 +21,7 @@ The typical flow for adding a new data source is:
         # This will add the entry to the default `catalog.yaml` file
         catalog.add_entry(entry)
       ```
-  - Upload optimized files to a remote file store, e.g.
+    - Upload optimized files to a remote file store, e.g.
       ```python
         url = entry.resources['parquet']
         # url = gs://public-data-source/catalog/clinvar/submission_summary/v2020-06/20200601T000000/data.parquet
@@ -79,12 +79,12 @@ python clinvar.py flow - run
 Environment variables related to authentication and storage are managed in one of three ways:
 
 1. Secret variables (e.g. passwords and paths to key files) are not handled explicitly
-  - These should be managed by the user, e.g. by setting env vars when running containers
+    - These should be managed by the user, e.g. by setting env vars when running containers
 2. Public variables common to groups of code with the same privileges are set in `.env` files
-  - Bucket/project names are a good example of this
-  - For code using the same storage/authentication properties, a `.env` file should be loaded
+    - Bucket/project names are a good example of this
+    - For code using the same storage/authentication properties, a `.env` file should be loaded
     at the beginning of each process.
 3. Conflicting variables for code that needs settings from multiple environments should load the appropriate variables from `.env` files and set the corresponding properties explicitly on python objects
-  - An example of this would be any pipeline needing to access both private and public data
-  - Variable values don't need to come from `.env` files, but this makes it easier to
+    - An example of this would be any pipeline needing to access both private and public data
+    - Variable values don't need to come from `.env` files, but this makes it easier to
     keep code using both methods in sync
