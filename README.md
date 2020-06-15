@@ -1,6 +1,21 @@
 # Public Data Source Resources
 
-The purpose of this repository is to serve as the first step in a data processing workflow.  The source code within contains utilities for working with external data providers as well as a catalog model for managing the creation of versioned datasets.
+The purpose of this repository is to act as the point-of-entry for all external data sources in a workflow.  The source code within contains utilities for working with these sources as well as a catalog model for managing metadata and links related to versioned datasets.  Common problems this attempts to solve are:
+
+- Unifying derived or imported mappings between nomenclature systems
+  - Gene, trait, and protein entities often share mappings when scoped to a particular type of analysis
+- Sharing ontology subsets or extractions
+  - EFO extractions are messy and often require derived fields to be useful in a pipeline relying on tabular data, e.g. all descendents of a term
+- Centralizing target entity sets
+  - Pipelines often start with a notion of target genes, phenotypes or proteins and these high priority sets should be shareable
+- Building data snapshots from continuously updated (or poorly regulated) sources
+  - Data from APIs or FTP services with no standard release schedule should be compiled into immutable artifacts for downstream operations
+- Aggregating documentation for sources
+  - This is a natural place to explain what data a source provides along with schema info, summary notebooks, and exploratory analyses 
+
+The utilities in this repository only suppose that all workstreams agree on the *metadata* necessary to define these things above.  At the moment, this just means that a best effort is made to "export" the information used by a pipeline as entries in a [catalog.yaml](catalog.yaml) file.  This should contain the minimum amount of links, parameters, version strings and documentation that make it possible for two different projects to agree on the same to access data for a source (but the particulars of using the data are up to the implementer -- this "catalog" only points to where it lives).
+
+### Usage
 
 The typical flow for adding a new data source is:
 
