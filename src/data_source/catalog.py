@@ -4,6 +4,7 @@ from pathlib import Path
 import yaml
 import fsspec
 import os
+from . import ENV_CATALOG_PATH
 from .core import Entry, Catalog, Storage, DEFAULT_STORAGE
 import logging
 logger = logging.getLogger(__name__)
@@ -11,11 +12,11 @@ logger = logging.getLogger(__name__)
 PathType = Union[str, Path]
 
 def default_urlpath() -> str:
-    urlpath = os.getenv('CATALOG_PATH')
+    urlpath = os.getenv(ENV_CATALOG_PATH)
     if not urlpath:
         raise ValueError(
-            'Catalog must be provided explicitly or '
-            'set using environment variable "CATALOG_PATH"'
+            f'Catalog must be provided explicitly or '
+            'set using environment variable "{CATALOG_PATH}"'
         )
     return urlpath
 

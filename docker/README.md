@@ -3,11 +3,11 @@
 ### Build
 
 ```bash
-cd docker
+# From project root:
 # Build the base image
-docker build -t public-data-source .
-# Build image with more opinionated environment
-# (e.g. adds VScode IDE and jupyterlab extensions)
+docker build -t public-data-source -f Dockerfile .
+# Build image with more opinionated environment (includes
+# VScode IDE, jupyterlab extensions, and dev/test packages)
 docker build -t public-data-source-dev -f Dockerfile.dev .
 ```
 
@@ -15,7 +15,7 @@ docker build -t public-data-source-dev -f Dockerfile.dev .
 
 ```bash
 WORK_DIR=/home/jovyan/work
-# NOTE: --user=root is only used to provide SUDO to NB_USER (jovyan)
+# NOTE: --user=root is only used to provide sudo to NB_USER (jovyan)
 # but both jupyterlab and vscode server will run as non-root users
 docker run --rm -ti -e GRANT_SUDO=yes --user=root \
 -v $HOME/.rs_auth:$WORK_DIR/auth \
@@ -28,3 +28,5 @@ docker run --rm -ti -e GRANT_SUDO=yes --user=root \
 public-data-source-dev
 # -p 8887:8887 and VSCODE_TOKEN are not necessary with base image
 ```
+
+Access JupyterLab at 8888 and VSCode at 8887.

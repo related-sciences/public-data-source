@@ -1,11 +1,18 @@
 ARG BASE_CONTAINER=public-data-source
 FROM $BASE_CONTAINER
 
+COPY requirements-dev.txt requirements-test.txt /tmp/
+RUN conda install --yes \
+    --file /tmp/requirements-dev.txt \
+    --file /tmp/requirements-test.txt && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
+
 # Jupyter lab extension installs
-# RUN jupyter labextension install @jupyterlab/toc
-# fix-permissions /home/$NB_USER ?
+RUN jupyter labextension install @jupyterlab/toc
 
 USER root
+
 # VS code-server install
 RUN cd /opt \
   && wget -q https://github.com/cdr/code-server/releases/download/3.2.0/code-server-3.2.0-linux-x86_64.tar.gz \
@@ -16,19 +23,25 @@ RUN cd /opt \
   && code-server --install-extension ms-python.python \
   && code-server --install-extension njpwerner.autodocstring \
   && code-server --install-extension bungcip.better-toml
-COPY dev.code-workspace $WORK_DIR/
+COPY docker/dev.code-workspace $WORK_DIR/
 RUN mkdir $WORK_DIR/logs
 
 # Override cmd on entry at:
 # https://github.com/jupyter/docker-stacks/blob/master/base-notebook/Dockerfile#L130
 # ENTRYPOINT ["tini", "-g", "--"]
 # CMD ["start-notebook.sh"]
-COPY start-all.sh start-vscode.sh /usr/local/bin/
+COPY docker/start-all.sh docker/start-vscode.sh /usr/local/bin/
+RUN chmod a+rx /usr/local/bin/start-all.sh /usr/local/bin/start-vscode.sh
 
 # This is critical because code-server will write to
 # /home/jovyan/.local/share/code-server as root, and
 # alter permissions on /home/jovyan/.local/share/jupyter
 RUN fix-permissions "/home/${NB_USER}"
+
+# Add dotenv module cli
+COPY docker/fire-dotenv.sh /usr/local/bin/fire-dotenv
+RUN chmod a+rx /usr/local/bin/fire-dotenv
+
 USER $NB_UID
 
 CMD ["start-all.sh"]

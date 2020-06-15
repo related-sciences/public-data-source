@@ -1,4 +1,5 @@
 from __future__ import annotations
+from . import ENV_GCS_BUCKET, ENV_GCS_PROJECT, ENV_GCS_ROOT
 from pydantic import BaseModel, BaseSettings, Field, validator  # pylint:disable=no-name-in-module
 from enum import Enum
 from datetime import datetime
@@ -89,13 +90,13 @@ class Storage(BaseSettings):
     class Config:
         fields = {
             'project': {
-                'env': 'GCS_PROJECT'
+                'env': ENV_GCS_PROJECT
             },
             'bucket': {
-                'env': 'GCS_BUCKET'
+                'env': ENV_GCS_BUCKET
             },
             'root': {
-                'env': 'GCS_ROOT'
+                'env': ENV_GCS_ROOT
             }
         }
 
@@ -110,7 +111,15 @@ class Storage(BaseSettings):
         return url + '/' + path
 
 
-DEFAULT_STORAGE = Storage(slug='gcs', scheme='gs')
+def _default_storage():
+    if not ENV_GCS_BUCKET in os.environ or not os.environ[ENV_GCS_BUCKET]:
+        raise ValueError(
+            'Default storage parameters not set in environment '
+            f'(must set {ENV_GCS_BUCKET}, {ENV_GCS_PROJECT} and {ENV_GCS_ROOT}).'
+        )
+    return Storage(slug='gcs', scheme='gs')
+
+DEFAULT_STORAGE = _default_storage()
 
 EntryKey = namedtuple('EntryKey', ['source', 'storage', 'artifact', 'version', 'created'])
 

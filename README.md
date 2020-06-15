@@ -1,17 +1,17 @@
 # Public Data Source Resources
 
-The purpose of this repository is to serve as the first step in a data processing workflow.  The source code within contains utilities for working with external data providers as well as a catalog model for managing the creation of versioned data sources.
+The purpose of this repository is to serve as the first step in a data processing workflow.  The source code within contains utilities for working with external data providers as well as a catalog model for managing the creation of versioned datasets.
 
 The typical flow for adding a new data source is:
 
 1. Add a folder to [`import`](import) for the new source
-2. Create a script or notebook that does the following:
+2. Create a script that does the following:
   - Download and repackage artifacts from scientific dbs into more portable, efficient formats
   - Create a catalog entry that represents the artifact, e.g.
       ```python
         from data_source import catalog
         entry = catalog.create_entry(
-            source='clinvar', 
+            source='clinvar',
             slug='submission_summary',
             version='v2020-06',
             created=pd.to_datetime('2020-06-01').to_pydatetime(),
@@ -23,31 +23,26 @@ The typical flow for adding a new data source is:
       ```
   - Upload optimized files to a remote file store, e.g.
       ```python
-        url = entry.url()
+        url = entry.resources['parquet']
         # url = gs://public-data-source/catalog/clinvar/submission_summary/v2020-06/20200601T000000/data.parquet
         entry.fs.upload('/tmp/submission_summary.parquet', url)
       ```
 3. In another project that requires access to versioned datasets, use the catalog code to get urls for an artifact or explore those available, e.g.
 
 ```python
+import fsspec
 from data_source import catalog
 from pyspark.sql.session import SparkSession
+spark = SparkSession.builder.getOrCreate()
 
 catalog_url = 'https://raw.githubusercontent.com/related-sciences/public-data-source/master/catalog.yaml'
+
+# Un-nest catalog into tabular format
 df = catalog.load(catalog_url).to_pandas()
-df.query('source_slug == "clinvar"')
-```
 
-|    | source_slug   | artifact_slug      | artifact_version   | artifact_created    | artifact_formats                                                           | storage_slug   | storage_scheme   | storage_bucket     | storage_root   | storage_project   |  
-|---|--------------|-------------------|-------------------|--------------------|---------------------------------------------------------------------------|---------------|-----------------|-------------------|---------------|------------------|
-|  0 | clinvar       | submission_summary | v2020-06           | 2020-06-01 00:00:00 | [{'name': 'parquet', 'type': 'file', 'default': True, 'properties': None}] | gcs            | gs               | public-data-source | catalog        | target-ranking    |
-    
-Choose an entry and get urls based on files available to load:
+# Select one of potentially several resources for the entry
+url = df.query('source_slug == "clinvar"')['resources_parquet'].iloc[0]
 
-```python
-import fsspec
-spark = SparkSession.builder.getOrCreate()
-url = df.query('source_slug == "clinvar"')['entry'].iloc[0].url()
 df = spark.read.parquet(fsspec.open_local(f'simplecache::{url}'))
 df.select('#VariationID', 'ClinicalSignificance', 'SubmittedPhenotypeInfo').show(5, 50)
 +------------+----------------------+--------------------------------------------------+
@@ -61,3 +56,35 @@ df.select('#VariationID', 'ClinicalSignificance', 'SubmittedPhenotypeInfo').show
 +------------+----------------------+--------------------------------------------------+
 only showing top 5 rows
 ```
+
+### Scripting
+
+A helpful feature in data integration scripts, especially those interacting with private sources, is being able to see what they would do before you run them.  This is particularly useful for data sources that update irregularly and require some attention after each update (which is most of them).  A good solution for this rather than programming dry-run flags is to first define integration scripts as DAGs for introspection.  The [clinvar.py](import/clinvar/clinvar.py) script is a good example of this where Prefect decorators make it easy to lift code in an eagerly evaluated program into a DAG.  The first step in any session to run the script then (e.g. [import/clinvar/session.ipynb](import/clinvar/session.ipynb)) might look like this:
+
+```bash
+python clinvar.py flow - visualize --filename=flow --format=png
+```
+
+![clinvar_flow](import/clinvar/flow.png)
+
+
+Then to run it after making sure the paths/buckets/urls are all correct:
+
+```bash
+python clinvar.py flow - run
+```
+
+### Environment Management
+
+Environment variables related to authentication and storage are managed in one of three ways:
+
+1. Secret variables (e.g. passwords and paths to key files) are not handled explicitly
+  - These should be managed by the user, e.g. by setting env vars when running containers
+2. Public variables common to groups of code with the same privileges are set in `.env` files
+  - Bucket/project names are a good example of this
+  - For code using the same storage/authentication properties, a `.env` file should be loaded
+    at the beginning of each process.
+3. Conflicting variables for code that needs settings from multiple environments should load the appropriate variables from `.env` files and set the corresponding properties explicitly on python objects
+  - An example of this would be any pipeline needing to access both private and public data
+  - Variable values don't need to come from `.env` files, but this makes it easier to
+    keep code using both methods in sync

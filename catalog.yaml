@@ -1,0 +1,40 @@
+entries:
+- artifact:
+    created: 2020-06-01 00:00:00
+    filename: data
+    formats:
+    - default: true
+      name: parquet
+      properties: null
+      type: file
+    metadata:
+      info: "<class 'pandas.core.frame.DataFrame'>\nRangeIndex: 1223610 entries, 0\
+        \ to 1223609\nData columns (total 13 columns):\n #   Column              \
+        \         Non-Null Count    Dtype \n---  ------                       --------------\
+        \    ----- \n 0   #VariationID                 1223610 non-null  int64 \n\
+        \ 1   ClinicalSignificance         1223610 non-null  object\n 2   DateLastEvaluated\
+        \            1223610 non-null  object\n 3   Description                  1223610\
+        \ non-null  object\n 4   SubmittedPhenotypeInfo       1223610 non-null  object\n\
+        \ 5   ReportedPhenotypeInfo        1223610 non-null  object\n 6   ReviewStatus\
+        \                 1223610 non-null  object\n 7   CollectionMethod        \
+        \     1223610 non-null  object\n 8   OriginCounts                 1223610\
+        \ non-null  object\n 9   Submitter                    1223610 non-null  object\n\
+        \ 10  SCV                          1223610 non-null  object\n 11  SubmittedGeneSymbol\
+        \          1223605 non-null  object\n 12  ExplanationOfInterpretation  1223610\
+        \ non-null  object\ndtypes: int64(1), object(12)\nmemory usage: 121.4+ MB\n"
+      nrow: 1223610
+    name: null
+    slug: submission_summary
+    version: v2020-06
+  resources:
+    parquet: gs://public-data-source/catalog/clinvar/submission_summary/v2020-06/20200601T000000/data.parquet
+  source:
+    description: null
+    name: null
+    slug: clinvar
+  storage:
+    bucket: public-data-source
+    project: target-ranking
+    root: catalog
+    scheme: gs
+    slug: gcs
