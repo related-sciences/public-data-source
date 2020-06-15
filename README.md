@@ -1,4 +1,4 @@
-# Public Data Source Resources
+# Public Data Source Catalog
 
 The purpose of this repository is to act as the point-of-entry for all external data sources in a workflow.  The source code within contains utilities for working with these sources as well as a catalog model for managing metadata and links related to versioned datasets.  Common problems this attempts to solve are:
 
