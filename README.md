@@ -1,4 +1,4 @@
-# Public Data Source Resources
+# Public Data Source Catalog
 
 The purpose of this repository is to act as the point-of-entry for all external data sources in a workflow.  The source code within contains utilities for working with these sources as well as a catalog model for managing metadata and links related to versioned datasets.  Common problems this attempts to solve are:
 
@@ -13,7 +13,7 @@ The purpose of this repository is to act as the point-of-entry for all external 
 - Aggregating documentation for sources
   - This is a natural place to explain what data a source provides along with schema info, summary notebooks, and exploratory analyses 
 
-The utilities in this repository only suppose that all workstreams agree on the *metadata* necessary to define these things above.  At the moment, this just means that a best effort is made to "export" the information used by a pipeline as entries in a [catalog.yaml](catalog.yaml) file.  This should contain the minimum amount of links, parameters, version strings and documentation that make it possible for two different projects to agree on the same to access data for a source (but the particulars of using the data are up to the implementer -- this "catalog" only points to where it lives).
+The utilities in this repository only suppose that all workstreams agree on the *metadata* necessary to define these things above.  At the moment, this just means that a best effort is made to "export" the information used by a pipeline as entries in a [catalog.yaml](catalog.yaml) file.  This should contain the minimum amount of links, parameters, version strings and documentation that make it possible for two different projects to agree on the same way to access data for a source (but the particulars of using the data are up to the implementer -- this "catalog" only points to where it lives).
 
 ### Usage
 
