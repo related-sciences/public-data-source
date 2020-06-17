@@ -1,10 +1,13 @@
 from __future__ import annotations
 from . import ENV_GCS_BUCKET, ENV_GCS_PROJECT, ENV_GCS_ROOT
+from . import utils
 from pydantic import BaseModel, BaseSettings, Field, validator  # pylint:disable=no-name-in-module
 from enum import Enum
 from datetime import datetime
 from typing import Optional, List, Mapping, Hashable, Any
 from collections import namedtuple
+from pathlib import Path
+import shutil
 import os
 import re
 
@@ -12,6 +15,7 @@ IS_SLUG_REGEX = r"^[A-Za-z0-9_]+$"
 IS_SLUG = re.compile(IS_SLUG_REGEX)
 ARTIFACT_FILENAME = 'data'
 ARTIFACT_DT_FMT = '%Y%m%dT%H%M%S'
+DATA_SOURCE_CACHE_DIR = os.getenv('DATA_SOURCE_CACHE_DIR', '/tmp/data_source_cache')
 
 def _check_slug(v):
     if not IS_SLUG.match(v):
@@ -110,6 +114,10 @@ class Storage(BaseSettings):
             url += '/' + self.root
         return url + '/' + path
 
+    @property
+    def fs(self):
+        import fsspec
+        return fsspec.filesystem(self.scheme)
 
 def _default_storage():
     if not ENV_GCS_BUCKET in os.environ or not os.environ[ENV_GCS_BUCKET]:
@@ -129,31 +137,38 @@ def entry_key_str(key: EntryKey, date_format=ARTIFACT_DT_FMT):
     key = '\n'.join([f'{k}: {v}' for k, v in key.items()])
     return "{\n" + key + "\n}"
 
-def resource_url(
+
+def resource_path(
     source: Source, 
     artifact: Artifact, 
     storage: Storage, 
-    filename: str=None, 
-    format: str=None
+    filename: Optional[str]=None, 
+    format: Optional[str]=None,
+    relative=False
 ):
-    """Create URL for artifact resource
+    """Create URL or relative path for artifact resource
 
     Examples
     --------
-    >>> resource_url(source, artifact, storage, filename='data', format='parquet')
+    >>> resource_url(source, artifact, storage, filename='data', format='parquet', relative=False)
     > "gs://public-data-source/catalog/clinvar/submission_summary/v2020-06/20200601T000000/data.parquet"
 
+    >>> resource_url(source, artifact, storage, filename='data', format='parquet', relative=True)
+    > "clinvar/submission_summary/v2020-06/20200601T000000/data.parquet"
+
     """
-    basename = (filename or artifact.filename) + '.' + \
-        (format or artifact.default_format.name)
+    format = format or artifact.default_format.name
+    basename = (filename or artifact.filename) + '.' + format
     timestamp = artifact.created.strftime(ARTIFACT_DT_FMT)
-    path = '/'.join([
+    path = storage.fs.pathsep.join([
         source.slug,
         artifact.slug,
         artifact.version,
         timestamp,
         basename
     ])
+    if relative:
+        return path
     return storage.url(path)
 
 class Entry(BaseModel):
@@ -169,7 +184,7 @@ class Entry(BaseModel):
     def default_resources(cls, v, *, values, **kwargs):
         if v is None:
             v = {
-                f.name: resource_url(
+                f.name: resource_path(
                     values['source'], 
                     values['artifact'], 
                     values['storage'],
@@ -194,8 +209,48 @@ class Entry(BaseModel):
 
     @property
     def fs(self):
-        import fsspec
-        return fsspec.filesystem(self.storage.scheme)
+        return self.storage.fs
+
+    @property
+    def url(self):
+        # pylint: disable=unsubscriptable-object
+        return self.resources[self.artifact.default_format.name]
+
+    @property
+    def path(self):
+        return resource_path(self.source, self.artifact, self.storage, relative=True)
+
+    def download(self, local_dir: str, format: Optional[str] = None, overwrite: bool=True) -> str:
+        """Download data for catalog entry to a local directory
+
+        Parameters
+        ----------
+        local_dir : str
+            Path to local directory
+        format : Optional[str], optional
+            Type of resource to download e.g. "parquet", "csv", "json.gz" etc.
+            If not provided, the default format for the artifact will be used.
+        overwrite: bool
+            If the local path exists and `overwrite` is True, it will be deleted
+            and new data downloaded to it.  Otherwise, the path will
+            be returned immediately.  If the local path does not exist,
+            `overwrite` has no effect.
+
+        Returns
+        -------
+        str
+            Local path containing entry data.
+        """
+        format = format or self.artifact.default_format.name
+        # pylint: disable=unsubscriptable-object
+        url = self.resources[format]
+        path = Path(local_dir) / self.path
+        if overwrite and path.exists():
+            shutil.rmtree(path)
+        if path.exists():
+            return str(path)
+        self.fs.download(url, path, recursive=self.fs.isdir(url))
+        return str(path)
 
 
 class Catalog(BaseModel):
@@ -208,6 +263,9 @@ class Catalog(BaseModel):
     def to_dict(self) -> Mapping[EntryKey, Entry]:
         """Map entries by key"""
         return dict(zip([e.key for e in self.entries], self.entries))
+
+    def merge(self, other: Catalog) -> Catalog:
+        return Catalog(entries=list(self.entries) + list(other.entries))
 
     def add(self, entry: Entry):
         """Add new entry
@@ -254,3 +312,85 @@ class Catalog(BaseModel):
         if dropna:
             df = df.dropna(how='all', axis=1)
         return df
+
+    def find(
+        self, 
+        source: str, 
+        artifact: str, 
+        version: Optional[str]='latest'
+    ) -> List[Entry]:
+        """Find entries for a specific source artifact
+
+        Parameters
+        ----------
+        source : str
+            Source slug (e.g. "clinvar")
+        artifact : str
+            Artifact slug (e.g. "submission_summary")
+        version : str
+            Version string, by default 'latest' for most
+            recent version by lexsort. If None, no
+            version filter is applied.
+
+        Returns
+        -------
+        List[Entry]
+            Matching entries
+        """
+        df = self.to_pandas().set_index(['source_slug', 'artifact_slug'])
+        df = df.loc[[(source, artifact)]]
+        df = df.sort_values(['artifact_version', 'artifact_created'], ascending=False)
+        if version:
+            if version == 'latest' and len(df) > 0:
+                version = df['artifact_version'].max()
+            df = df[df['artifact_version'] == version]
+        return df['entry'].tolist()
+
+    def download(
+        self,
+        source: str, 
+        artifact: str, 
+        version: str='latest', 
+        local_dir:str=DATA_SOURCE_CACHE_DIR, 
+        overwrite: bool=False
+    ) -> str:
+        """Download data for a specific source artifact
+
+        Parameters
+        ----------
+        source : str
+            Source slug (e.g. "clinvar")
+        artifact : str
+            Artifact slug (e.g. "submission_summary")
+        version : str
+            Version string, by default 'latest' for most
+            recent version by lexsort
+        local_dir : str
+            Path to local directory in which downloaded data
+            will be stored, by default environment variable 
+            `DATA_SOURCE_CACHE_DIR`
+        overwrite : bool
+            If the artifact data has already been downloaded,
+            the path will be returned as is if `overwrite` is
+            False.  Otherwise it will be deleted and 
+            re-downloaded
+
+        Returns
+        -------
+        str
+            Path to local file or directory
+
+        Raises
+        ------
+        ValueError
+            If no entries could be found for the source, artifact, 
+            and version
+        """
+        entries = self.find(source, artifact, version)
+        if len(entries) == 0:
+            raise ValueError(
+                f'No catalog entries found for source={source}, '
+                f'artifact={artifact}, version={version}'
+            )
+        # Use max version, max created if multiple entries found
+        return entries[0].download(local_dir, overwrite=overwrite)

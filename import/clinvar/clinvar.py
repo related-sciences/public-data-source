@@ -84,7 +84,7 @@ def flow(
     catalog_path = catalog.default_urlpath()
     filename = raw_url.split('/')[-1]
 
-    with Flow('clinvar') as flow:
+    with Flow(f'clinvar-{version}') as flow:
         # Add constants with important to DAG (all others are not visualized)
         catalog_path = constant(catalog_path, name='catalog_path')
         url = constant(entry.resources['parquet'], name='url') # pylint:disable=unsubscriptable-object

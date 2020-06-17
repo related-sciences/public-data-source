@@ -1,6 +1,7 @@
 from datetime import datetime, date
-from typing import Optional, Union
+from typing import Optional, Union, Sequence
 from pathlib import Path
+import functools
 import yaml
 import fsspec
 import os
@@ -15,8 +16,8 @@ def default_urlpath() -> str:
     urlpath = os.getenv(ENV_CATALOG_PATH)
     if not urlpath:
         raise ValueError(
-            f'Catalog must be provided explicitly or '
-            'set using environment variable "{CATALOG_PATH}"'
+            'Catalog must be provided explicitly or '
+            f'set using environment variable "{ENV_CATALOG_PATH}"'
         )
     return urlpath
 
@@ -25,6 +26,8 @@ def _check_urlpath(urlpath: Optional[PathType] = None) -> str:
         return str(urlpath)
     return default_urlpath()
 
+def merge(catalogs: Sequence[Catalog]) -> Catalog:
+    return functools.reduce(lambda x, y: x.merge(y), catalogs)
 
 def empty() -> Catalog:
     """Create empty `Catalog` instance"""

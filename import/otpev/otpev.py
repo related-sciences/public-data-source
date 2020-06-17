@@ -16,10 +16,14 @@ from pyspark.sql.session import SparkSession
 
 OT_URL_FMT = 'https://storage.googleapis.com/open-targets-data-releases/{version}/input/evidence-files'
 
-# Dates correspond to the approximate release date of each OT version
-# See: http://blog.opentargets.org/tag/release-notes/
+# Dates correspond to the approximate release date of each OT version; see:
+# http://blog.opentargets.org/tag/release-notes/
+# https://docs.targetvalidation.org/technical-pipeline/technical-notes
 OT_VERSION_RELEASE_DATES = {
-    '20.04': '2020-04-07'
+    '20.06': '2020-06-16',
+    '20.04': '2020-04-27',
+    '20.02': '2020-03-02',
+    '19.11': '2019-11-28'
 }
 
 #pylint: disable=no-value-for-parameter
@@ -30,9 +34,11 @@ def download(url, json_path):
     return json_path
 
 @task
-def convert_to_parquet(json_path, parquet_path):
+def convert_to_parquet(json_path, parquet_path, n_partitions=None):
     spark = SparkSession.builder.getOrCreate()
     df = spark.read.json(json_path)
+    if n_partitions is not None:
+        df = df.repartition(n_partitions)
     df.write.parquet(parquet_path, mode='overwrite')
     info = dict(
         schema=df._jdf.schema().treeString(),
@@ -75,8 +81,9 @@ def flow(
     relpath: str,
     convert: bool = True,
     output_dir: str='/tmp/otpev', 
-    version: str='20.04',
-    created: Optional[str]=None
+    version: str='20.06',
+    created: Optional[str]=None,
+    n_partitions: Optional[int]=None
 ) -> Flow:
     """Get OTP evidence import flow
     
@@ -97,6 +104,9 @@ def flow(
         reflect when OT created the release and should never change
         for the same `version`.  For this reason, `created` will
         default to known release dates (see `OT_VERSION_RELEASE_DATES`).
+    n_partitions: int, optional
+        Number of partitions used to write parquet result.
+        Set as None to use default partitioning.
 
     Raises
     ------
@@ -109,10 +119,11 @@ def flow(
     Flow
         Prefect Flow
     """
+    version = str(version)
     if created is None:
         if version not in OT_VERSION_RELEASE_DATES:
             raise KeyError(
-                f'No default release date known for version "{version}" '
+                f'No release date known for version "{version}" '
                 '(pass `created` explicitly or add date to `OT_VERSION_RELEASE_DATES`)'
             )
         created = OT_VERSION_RELEASE_DATES[version]
@@ -133,11 +144,12 @@ def flow(
     )
     catalog_path = catalog.default_urlpath()
 
-    with Flow(f'otpev-{source}') as flow:
+    with Flow(f'otpev-{source}-v{version}') as flow:
         # Add constants with important to DAG (all others are not visualized)
         catalog_path = constant(catalog_path, name='catalog_path')
         dst_url = next(iter(entry.resources.values()))
         entry = constant(entry, name=f'entry.key={entry_key_str(entry.key)}', value=False)
+        n_partitions = constant(n_partitions, name='n_partitions')
         if is_file:
             filename = src_url.split('/')[-1]
             src_url = constant(src_url, name='src_url') 
@@ -147,7 +159,7 @@ def flow(
             json_path = constant(str(output_dir / filename), name='json_path')
             parquet_path = constant(str(output_dir / filename.split('.')[0]) + '.parquet', name='parquet_path')
             json_path = download(src_url, json_path)
-            info = convert_to_parquet(json_path, parquet_path)
+            info = convert_to_parquet(json_path, parquet_path, n_partitions=n_partitions)
 
             # Upload results
             # pylint:disable=unexpected-keyword-arg

@@ -234,3 +234,472 @@ entries:
     root: catalog
     scheme: gs
     slug: gcs
+- artifact:
+    created: 2020-04-27 00:00:00
+    filename: data
+    formats:
+    - default: true
+      name: parquet
+      properties: null
+      type: file
+    metadata:
+      nrow: 122219
+      schema: "root\n |-- access_level: string (nullable = true)\n |-- disease: struct\
+        \ (nullable = true)\n |    |-- id: string (nullable = true)\n |    |-- name:\
+        \ string (nullable = true)\n |    |-- source_name: string (nullable = true)\n\
+        \ |-- evidence: struct (nullable = true)\n |    |-- clinical_significance:\
+        \ string (nullable = true)\n |    |-- date_asserted: string (nullable = true)\n\
+        \ |    |-- evidence_codes: array (nullable = true)\n |    |    |-- element:\
+        \ string (containsNull = true)\n |    |-- gene2variant: struct (nullable =\
+        \ true)\n |    |    |-- date_asserted: string (nullable = true)\n |    | \
+        \   |-- evidence_codes: array (nullable = true)\n |    |    |    |-- element:\
+        \ string (containsNull = true)\n |    |    |-- functional_consequence: string\
+        \ (nullable = true)\n |    |    |-- is_associated: boolean (nullable = true)\n\
+        \ |    |    |-- provenance_type: struct (nullable = true)\n |    |    |  \
+        \  |-- database: struct (nullable = true)\n |    |    |    |    |-- dbxref:\
+        \ struct (nullable = true)\n |    |    |    |    |    |-- id: string (nullable\
+        \ = true)\n |    |    |    |    |    |-- url: string (nullable = true)\n |\
+        \    |    |    |    |    |-- version: string (nullable = true)\n |    |  \
+        \  |    |    |-- id: string (nullable = true)\n |    |    |    |    |-- version:\
+        \ string (nullable = true)\n |    |    |    |-- expert: struct (nullable =\
+        \ true)\n |    |    |    |    |-- statement: string (nullable = true)\n |\
+        \    |    |    |    |-- status: boolean (nullable = true)\n |    |    |--\
+        \ resource_score: struct (nullable = true)\n |    |    |    |-- method: struct\
+        \ (nullable = true)\n |    |    |    |    |-- description: string (nullable\
+        \ = true)\n |    |    |    |-- type: string (nullable = true)\n |    |   \
+        \ |    |-- value: double (nullable = true)\n |    |    |-- urls: array (nullable\
+        \ = true)\n |    |    |    |-- element: struct (containsNull = true)\n | \
+        \   |    |    |    |-- nice_name: string (nullable = true)\n |    |    | \
+        \   |    |-- url: string (nullable = true)\n |    |-- is_associated: boolean\
+        \ (nullable = true)\n |    |-- known_mutations: array (nullable = true)\n\
+        \ |    |    |-- element: struct (containsNull = true)\n |    |    |    |--\
+        \ functional_consequence: string (nullable = true)\n |    |    |    |-- preferred_name:\
+        \ string (nullable = true)\n |    |-- provenance_type: struct (nullable =\
+        \ true)\n |    |    |-- database: struct (nullable = true)\n |    |    | \
+        \   |-- dbxref: struct (nullable = true)\n |    |    |    |    |-- id: string\
+        \ (nullable = true)\n |    |    |    |    |-- url: string (nullable = true)\n\
+        \ |    |    |    |    |-- version: string (nullable = true)\n |    |    |\
+        \    |-- id: string (nullable = true)\n |    |    |    |-- version: string\
+        \ (nullable = true)\n |    |    |-- expert: struct (nullable = true)\n | \
+        \   |    |    |-- statement: string (nullable = true)\n |    |    |    |--\
+        \ status: boolean (nullable = true)\n |    |    |-- literature: struct (nullable\
+        \ = true)\n |    |    |    |-- references: array (nullable = true)\n |   \
+        \ |    |    |    |-- element: struct (containsNull = true)\n |    |    | \
+        \   |    |    |-- lit_id: string (nullable = true)\n |    |-- resource_score:\
+        \ struct (nullable = true)\n |    |    |-- type: string (nullable = true)\n\
+        \ |    |    |-- value: long (nullable = true)\n |    |-- urls: array (nullable\
+        \ = true)\n |    |    |-- element: struct (containsNull = true)\n |    | \
+        \   |    |-- nice_name: string (nullable = true)\n |    |    |    |-- url:\
+        \ string (nullable = true)\n |    |-- variant2disease: struct (nullable =\
+        \ true)\n |    |    |-- clinical_significance: string (nullable = true)\n\
+        \ |    |    |-- date_asserted: string (nullable = true)\n |    |    |-- evidence_codes:\
+        \ array (nullable = true)\n |    |    |    |-- element: string (containsNull\
+        \ = true)\n |    |    |-- is_associated: boolean (nullable = true)\n |   \
+        \ |    |-- provenance_type: struct (nullable = true)\n |    |    |    |--\
+        \ database: struct (nullable = true)\n |    |    |    |    |-- dbxref: struct\
+        \ (nullable = true)\n |    |    |    |    |    |-- id: string (nullable =\
+        \ true)\n |    |    |    |    |    |-- url: string (nullable = true)\n | \
+        \   |    |    |    |    |-- version: string (nullable = true)\n |    |   \
+        \ |    |    |-- id: string (nullable = true)\n |    |    |    |    |-- version:\
+        \ string (nullable = true)\n |    |    |    |-- expert: struct (nullable =\
+        \ true)\n |    |    |    |    |-- statement: string (nullable = true)\n |\
+        \    |    |    |    |-- status: boolean (nullable = true)\n |    |    |  \
+        \  |-- literature: struct (nullable = true)\n |    |    |    |    |-- references:\
+        \ array (nullable = true)\n |    |    |    |    |    |-- element: struct (containsNull\
+        \ = true)\n |    |    |    |    |    |    |-- lit_id: string (nullable = true)\n\
+        \ |    |    |-- resource_score: struct (nullable = true)\n |    |    |   \
+        \ |-- method: struct (nullable = true)\n |    |    |    |    |-- description:\
+        \ string (nullable = true)\n |    |    |    |-- type: string (nullable = true)\n\
+        \ |    |    |    |-- value: double (nullable = true)\n |    |    |-- unique_experiment_reference:\
+        \ string (nullable = true)\n |    |    |-- urls: array (nullable = true)\n\
+        \ |    |    |    |-- element: struct (containsNull = true)\n |    |    | \
+        \   |    |-- nice_name: string (nullable = true)\n |    |    |    |    |--\
+        \ url: string (nullable = true)\n |-- literature: struct (nullable = true)\n\
+        \ |    |-- references: array (nullable = true)\n |    |    |-- element: struct\
+        \ (containsNull = true)\n |    |    |    |-- lit_id: string (nullable = true)\n\
+        \ |-- sourceID: string (nullable = true)\n |-- target: struct (nullable =\
+        \ true)\n |    |-- activity: string (nullable = true)\n |    |-- id: string\
+        \ (nullable = true)\n |    |-- target_type: string (nullable = true)\n |--\
+        \ type: string (nullable = true)\n |-- unique_association_fields: struct (nullable\
+        \ = true)\n |    |-- alleleOrigin: string (nullable = true)\n |    |-- clinvarAccession:\
+        \ string (nullable = true)\n |    |-- gene: string (nullable = true)\n | \
+        \   |-- phenotype: string (nullable = true)\n |    |-- variant_id: string\
+        \ (nullable = true)\n |-- validated_against_schema_version: string (nullable\
+        \ = true)\n |-- variant: struct (nullable = true)\n |    |-- id: string (nullable\
+        \ = true)\n |    |-- type: string (nullable = true)\n"
+    name: null
+    slug: eva
+    version: v20.04
+  resources:
+    parquet: gs://public-data-source/catalog/otpev/eva/v20.04/20200427T000000/data.parquet
+  source:
+    description: null
+    name: null
+    slug: otpev
+  storage:
+    bucket: public-data-source
+    project: target-ranking
+    root: catalog
+    scheme: gs
+    slug: gcs
+- artifact:
+    created: 2020-04-27 00:00:00
+    filename: data
+    formats:
+    - default: true
+      name: parquet
+      properties: null
+      type: file
+    metadata:
+      nrow: 1931303
+      schema: "root\n |-- access_level: string (nullable = true)\n |-- disease: struct\
+        \ (nullable = true)\n |    |-- id: string (nullable = true)\n |    |-- reported_trait:\
+        \ string (nullable = true)\n |-- evidence: struct (nullable = true)\n |  \
+        \  |-- gene2variant: struct (nullable = true)\n |    |    |-- consequence_code:\
+        \ string (nullable = true)\n |    |    |-- date_asserted: string (nullable\
+        \ = true)\n |    |    |-- evidence_codes: array (nullable = true)\n |    |\
+        \    |    |-- element: string (containsNull = true)\n |    |    |-- functional_consequence:\
+        \ string (nullable = true)\n |    |    |-- is_associated: boolean (nullable\
+        \ = true)\n |    |    |-- provenance_type: struct (nullable = true)\n |  \
+        \  |    |    |-- database: struct (nullable = true)\n |    |    |    |   \
+        \ |-- dbxref: struct (nullable = true)\n |    |    |    |    |    |-- id:\
+        \ string (nullable = true)\n |    |    |    |    |    |-- version: string\
+        \ (nullable = true)\n |    |    |    |    |-- id: string (nullable = true)\n\
+        \ |    |    |    |    |-- version: string (nullable = true)\n |    |    |\
+        \    |-- expert: struct (nullable = true)\n |    |    |    |    |-- statement:\
+        \ string (nullable = true)\n |    |    |    |    |-- status: boolean (nullable\
+        \ = true)\n |    |    |    |-- literature: struct (nullable = true)\n |  \
+        \  |    |    |    |-- references: array (nullable = true)\n |    |    |  \
+        \  |    |    |-- element: struct (containsNull = true)\n |    |    |    |\
+        \    |    |    |-- author: string (nullable = true)\n |    |    |    |   \
+        \ |    |    |-- lit_id: string (nullable = true)\n |    |    |    |    | \
+        \   |    |-- year: long (nullable = true)\n |    |    |-- resource_score:\
+        \ struct (nullable = true)\n |    |    |    |-- method: struct (nullable =\
+        \ true)\n |    |    |    |    |-- description: string (nullable = true)\n\
+        \ |    |    |    |-- type: string (nullable = true)\n |    |    |    |-- value:\
+        \ double (nullable = true)\n |    |-- variant2disease: struct (nullable =\
+        \ true)\n |    |    |-- confidence_interval: string (nullable = true)\n |\
+        \    |    |-- date_asserted: string (nullable = true)\n |    |    |-- evidence_codes:\
+        \ array (nullable = true)\n |    |    |    |-- element: string (containsNull\
+        \ = true)\n |    |    |-- gwas_sample_size: long (nullable = true)\n |   \
+        \ |    |-- is_associated: boolean (nullable = true)\n |    |    |-- odds_ratio:\
+        \ double (nullable = true)\n |    |    |-- provenance_type: struct (nullable\
+        \ = true)\n |    |    |    |-- database: struct (nullable = true)\n |    |\
+        \    |    |    |-- dbxref: struct (nullable = true)\n |    |    |    |   \
+        \ |    |-- id: string (nullable = true)\n |    |    |    |    |    |-- version:\
+        \ string (nullable = true)\n |    |    |    |    |-- id: string (nullable\
+        \ = true)\n |    |    |    |    |-- version: string (nullable = true)\n |\
+        \    |    |    |-- expert: struct (nullable = true)\n |    |    |    |   \
+        \ |-- statement: string (nullable = true)\n |    |    |    |    |-- status:\
+        \ boolean (nullable = true)\n |    |    |    |-- literature: struct (nullable\
+        \ = true)\n |    |    |    |    |-- references: array (nullable = true)\n\
+        \ |    |    |    |    |    |-- element: struct (containsNull = true)\n | \
+        \   |    |    |    |    |    |-- author: string (nullable = true)\n |    |\
+        \    |    |    |    |    |-- lit_id: string (nullable = true)\n |    |   \
+        \ |    |    |    |    |-- year: long (nullable = true)\n |    |    |-- reported_trait:\
+        \ string (nullable = true)\n |    |    |-- resource_score: struct (nullable\
+        \ = true)\n |    |    |    |-- exponent: long (nullable = true)\n |    | \
+        \   |    |-- mantissa: long (nullable = true)\n |    |    |    |-- method:\
+        \ struct (nullable = true)\n |    |    |    |    |-- description: string (nullable\
+        \ = true)\n |    |    |    |-- type: string (nullable = true)\n |    |   \
+        \ |    |-- value: double (nullable = true)\n |    |    |-- study_link: string\
+        \ (nullable = true)\n |    |    |-- unique_experiment_reference: string (nullable\
+        \ = true)\n |-- sourceID: string (nullable = true)\n |-- target: struct (nullable\
+        \ = true)\n |    |-- activity: string (nullable = true)\n |    |-- id: string\
+        \ (nullable = true)\n |    |-- target_type: string (nullable = true)\n |--\
+        \ type: string (nullable = true)\n |-- unique_association_fields: struct (nullable\
+        \ = true)\n |    |-- disease_id: string (nullable = true)\n |    |-- study:\
+        \ string (nullable = true)\n |    |-- target: string (nullable = true)\n |\
+        \    |-- variant: string (nullable = true)\n |-- validated_against_schema_version:\
+        \ string (nullable = true)\n |-- variant: struct (nullable = true)\n |   \
+        \ |-- id: string (nullable = true)\n |    |-- rs_id: string (nullable = true)\n\
+        \ |    |-- source_link: string (nullable = true)\n |    |-- type: string (nullable\
+        \ = true)\n |    |-- type_link: string (nullable = true)\n"
+    name: null
+    slug: l2g
+    version: v20.04
+  resources:
+    parquet: gs://public-data-source/catalog/otpev/l2g/v20.04/20200427T000000/data.parquet
+  source:
+    description: null
+    name: null
+    slug: otpev
+  storage:
+    bucket: public-data-source
+    project: target-ranking
+    root: catalog
+    scheme: gs
+    slug: gcs
+- artifact:
+    created: 2019-11-28 00:00:00
+    filename: data
+    formats:
+    - default: true
+      name: parquet
+      properties: null
+      type: file
+    metadata:
+      nrow: 194170
+      schema: "root\n |-- access_level: string (nullable = true)\n |-- disease: struct\
+        \ (nullable = true)\n |    |-- id: string (nullable = true)\n |-- evidence:\
+        \ struct (nullable = true)\n |    |-- gene2variant: struct (nullable = true)\n\
+        \ |    |    |-- date_asserted: string (nullable = true)\n |    |    |-- evidence_codes:\
+        \ array (nullable = true)\n |    |    |    |-- element: string (containsNull\
+        \ = true)\n |    |    |-- functional_consequence: string (nullable = true)\n\
+        \ |    |    |-- is_associated: boolean (nullable = true)\n |    |    |-- provenance_type:\
+        \ struct (nullable = true)\n |    |    |    |-- database: struct (nullable\
+        \ = true)\n |    |    |    |    |-- dbxref: struct (nullable = true)\n | \
+        \   |    |    |    |    |-- id: string (nullable = true)\n |    |    |   \
+        \ |    |    |-- version: string (nullable = true)\n |    |    |    |    |--\
+        \ id: string (nullable = true)\n |    |    |    |    |-- version: string (nullable\
+        \ = true)\n |    |    |    |-- expert: struct (nullable = true)\n |    | \
+        \   |    |    |-- statement: string (nullable = true)\n |    |    |    | \
+        \   |-- status: boolean (nullable = true)\n |    |-- variant2disease: struct\
+        \ (nullable = true)\n |    |    |-- confidence_interval: string (nullable\
+        \ = true)\n |    |    |-- date_asserted: string (nullable = true)\n |    |\
+        \    |-- evidence_codes: array (nullable = true)\n |    |    |    |-- element:\
+        \ string (containsNull = true)\n |    |    |-- gwas_panel_resolution: long\
+        \ (nullable = true)\n |    |    |-- gwas_sample_size: long (nullable = true)\n\
+        \ |    |    |-- is_associated: boolean (nullable = true)\n |    |    |-- odds_ratio:\
+        \ string (nullable = true)\n |    |    |-- provenance_type: struct (nullable\
+        \ = true)\n |    |    |    |-- database: struct (nullable = true)\n |    |\
+        \    |    |    |-- dbxref: struct (nullable = true)\n |    |    |    |   \
+        \ |    |-- id: string (nullable = true)\n |    |    |    |    |    |-- version:\
+        \ string (nullable = true)\n |    |    |    |    |-- id: string (nullable\
+        \ = true)\n |    |    |    |    |-- version: string (nullable = true)\n |\
+        \    |    |    |-- expert: struct (nullable = true)\n |    |    |    |   \
+        \ |-- statement: string (nullable = true)\n |    |    |    |    |-- status:\
+        \ boolean (nullable = true)\n |    |    |    |-- literature: struct (nullable\
+        \ = true)\n |    |    |    |    |-- references: array (nullable = true)\n\
+        \ |    |    |    |    |    |-- element: struct (containsNull = true)\n | \
+        \   |    |    |    |    |    |-- lit_id: string (nullable = true)\n |    |\
+        \    |-- resource_score: struct (nullable = true)\n |    |    |    |-- exponent:\
+        \ long (nullable = true)\n |    |    |    |-- mantissa: long (nullable = true)\n\
+        \ |    |    |    |-- method: struct (nullable = true)\n |    |    |    | \
+        \   |-- description: string (nullable = true)\n |    |    |    |-- type: string\
+        \ (nullable = true)\n |    |    |    |-- value: double (nullable = true)\n\
+        \ |    |    |-- unique_experiment_reference: string (nullable = true)\n |--\
+        \ literature: struct (nullable = true)\n |    |-- references: array (nullable\
+        \ = true)\n |    |    |-- element: struct (containsNull = true)\n |    | \
+        \   |    |-- lit_id: string (nullable = true)\n |-- sourceID: string (nullable\
+        \ = true)\n |-- target: struct (nullable = true)\n |    |-- activity: string\
+        \ (nullable = true)\n |    |-- id: string (nullable = true)\n |    |-- target_type:\
+        \ string (nullable = true)\n |-- type: string (nullable = true)\n |-- unique_association_fields:\
+        \ struct (nullable = true)\n |    |-- disease_id: string (nullable = true)\n\
+        \ |    |-- pubmed_refs: string (nullable = true)\n |    |-- pvalue_annotation:\
+        \ string (nullable = true)\n |    |-- study_name: string (nullable = true)\n\
+        \ |    |-- target: string (nullable = true)\n |    |-- variant: string (nullable\
+        \ = true)\n |-- validated_against_schema_version: string (nullable = true)\n\
+        \ |-- variant: struct (nullable = true)\n |    |-- id: string (nullable =\
+        \ true)\n |    |-- type: string (nullable = true)\n"
+    name: null
+    slug: gwas
+    version: v19.11
+  resources:
+    parquet: gs://public-data-source/catalog/otpev/gwas/v19.11/20191128T000000/data.parquet
+  source:
+    description: null
+    name: null
+    slug: otpev
+  storage:
+    bucket: public-data-source
+    project: target-ranking
+    root: catalog
+    scheme: gs
+    slug: gcs
+- artifact:
+    created: 2020-06-16 00:00:00
+    filename: data
+    formats:
+    - default: true
+      name: parquet
+      properties: null
+      type: file
+    metadata:
+      nrow: 393232
+      schema: "root\n |-- access_level: string (nullable = true)\n |-- disease: struct\
+        \ (nullable = true)\n |    |-- id: string (nullable = true)\n |    |-- reported_trait:\
+        \ string (nullable = true)\n |-- evidence: struct (nullable = true)\n |  \
+        \  |-- gene2variant: struct (nullable = true)\n |    |    |-- consequence_code:\
+        \ string (nullable = true)\n |    |    |-- date_asserted: string (nullable\
+        \ = true)\n |    |    |-- evidence_codes: array (nullable = true)\n |    |\
+        \    |    |-- element: string (containsNull = true)\n |    |    |-- functional_consequence:\
+        \ string (nullable = true)\n |    |    |-- is_associated: boolean (nullable\
+        \ = true)\n |    |    |-- provenance_type: struct (nullable = true)\n |  \
+        \  |    |    |-- database: struct (nullable = true)\n |    |    |    |   \
+        \ |-- dbxref: struct (nullable = true)\n |    |    |    |    |    |-- id:\
+        \ string (nullable = true)\n |    |    |    |    |    |-- version: string\
+        \ (nullable = true)\n |    |    |    |    |-- id: string (nullable = true)\n\
+        \ |    |    |    |    |-- version: string (nullable = true)\n |    |    |\
+        \    |-- expert: struct (nullable = true)\n |    |    |    |    |-- statement:\
+        \ string (nullable = true)\n |    |    |    |    |-- status: boolean (nullable\
+        \ = true)\n |    |    |    |-- literature: struct (nullable = true)\n |  \
+        \  |    |    |    |-- references: array (nullable = true)\n |    |    |  \
+        \  |    |    |-- element: struct (containsNull = true)\n |    |    |    |\
+        \    |    |    |-- author: string (nullable = true)\n |    |    |    |   \
+        \ |    |    |-- lit_id: string (nullable = true)\n |    |    |    |    | \
+        \   |    |-- year: long (nullable = true)\n |    |    |-- resource_score:\
+        \ struct (nullable = true)\n |    |    |    |-- method: struct (nullable =\
+        \ true)\n |    |    |    |    |-- description: string (nullable = true)\n\
+        \ |    |    |    |-- type: string (nullable = true)\n |    |    |    |-- value:\
+        \ double (nullable = true)\n |    |-- variant2disease: struct (nullable =\
+        \ true)\n |    |    |-- confidence_interval: string (nullable = true)\n |\
+        \    |    |-- date_asserted: string (nullable = true)\n |    |    |-- evidence_codes:\
+        \ array (nullable = true)\n |    |    |    |-- element: string (containsNull\
+        \ = true)\n |    |    |-- gwas_sample_size: long (nullable = true)\n |   \
+        \ |    |-- is_associated: boolean (nullable = true)\n |    |    |-- odds_ratio:\
+        \ double (nullable = true)\n |    |    |-- provenance_type: struct (nullable\
+        \ = true)\n |    |    |    |-- database: struct (nullable = true)\n |    |\
+        \    |    |    |-- dbxref: struct (nullable = true)\n |    |    |    |   \
+        \ |    |-- id: string (nullable = true)\n |    |    |    |    |    |-- version:\
+        \ string (nullable = true)\n |    |    |    |    |-- id: string (nullable\
+        \ = true)\n |    |    |    |    |-- version: string (nullable = true)\n |\
+        \    |    |    |-- expert: struct (nullable = true)\n |    |    |    |   \
+        \ |-- statement: string (nullable = true)\n |    |    |    |    |-- status:\
+        \ boolean (nullable = true)\n |    |    |    |-- literature: struct (nullable\
+        \ = true)\n |    |    |    |    |-- references: array (nullable = true)\n\
+        \ |    |    |    |    |    |-- element: struct (containsNull = true)\n | \
+        \   |    |    |    |    |    |-- author: string (nullable = true)\n |    |\
+        \    |    |    |    |    |-- lit_id: string (nullable = true)\n |    |   \
+        \ |    |    |    |    |-- year: long (nullable = true)\n |    |    |-- reported_trait:\
+        \ string (nullable = true)\n |    |    |-- resource_score: struct (nullable\
+        \ = true)\n |    |    |    |-- exponent: long (nullable = true)\n |    | \
+        \   |    |-- mantissa: long (nullable = true)\n |    |    |    |-- method:\
+        \ struct (nullable = true)\n |    |    |    |    |-- description: string (nullable\
+        \ = true)\n |    |    |    |-- type: string (nullable = true)\n |    |   \
+        \ |    |-- value: double (nullable = true)\n |    |    |-- study_link: string\
+        \ (nullable = true)\n |    |    |-- unique_experiment_reference: string (nullable\
+        \ = true)\n |-- sourceID: string (nullable = true)\n |-- target: struct (nullable\
+        \ = true)\n |    |-- activity: string (nullable = true)\n |    |-- id: string\
+        \ (nullable = true)\n |    |-- target_type: string (nullable = true)\n |--\
+        \ type: string (nullable = true)\n |-- unique_association_fields: struct (nullable\
+        \ = true)\n |    |-- disease_id: string (nullable = true)\n |    |-- study:\
+        \ string (nullable = true)\n |    |-- target: string (nullable = true)\n |\
+        \    |-- variant: string (nullable = true)\n |-- validated_against_schema_version:\
+        \ string (nullable = true)\n |-- variant: struct (nullable = true)\n |   \
+        \ |-- id: string (nullable = true)\n |    |-- rs_id: string (nullable = true)\n\
+        \ |    |-- source_link: string (nullable = true)\n |    |-- type: string (nullable\
+        \ = true)\n |    |-- type_link: string (nullable = true)\n"
+    name: null
+    slug: l2g
+    version: v20.06
+  resources:
+    parquet: gs://public-data-source/catalog/otpev/l2g/v20.06/20200616T000000/data.parquet
+  source:
+    description: null
+    name: null
+    slug: otpev
+  storage:
+    bucket: public-data-source
+    project: target-ranking
+    root: catalog
+    scheme: gs
+    slug: gcs
+- artifact:
+    created: 2020-06-16 00:00:00
+    filename: data
+    formats:
+    - default: true
+      name: parquet
+      properties: null
+      type: file
+    metadata:
+      nrow: 125138
+      schema: "root\n |-- access_level: string (nullable = true)\n |-- disease: struct\
+        \ (nullable = true)\n |    |-- id: string (nullable = true)\n |    |-- name:\
+        \ string (nullable = true)\n |    |-- source_name: string (nullable = true)\n\
+        \ |-- evidence: struct (nullable = true)\n |    |-- clinical_significance:\
+        \ string (nullable = true)\n |    |-- date_asserted: string (nullable = true)\n\
+        \ |    |-- evidence_codes: array (nullable = true)\n |    |    |-- element:\
+        \ string (containsNull = true)\n |    |-- gene2variant: struct (nullable =\
+        \ true)\n |    |    |-- date_asserted: string (nullable = true)\n |    | \
+        \   |-- evidence_codes: array (nullable = true)\n |    |    |    |-- element:\
+        \ string (containsNull = true)\n |    |    |-- functional_consequence: string\
+        \ (nullable = true)\n |    |    |-- is_associated: boolean (nullable = true)\n\
+        \ |    |    |-- provenance_type: struct (nullable = true)\n |    |    |  \
+        \  |-- database: struct (nullable = true)\n |    |    |    |    |-- dbxref:\
+        \ struct (nullable = true)\n |    |    |    |    |    |-- id: string (nullable\
+        \ = true)\n |    |    |    |    |    |-- url: string (nullable = true)\n |\
+        \    |    |    |    |    |-- version: string (nullable = true)\n |    |  \
+        \  |    |    |-- id: string (nullable = true)\n |    |    |    |    |-- version:\
+        \ string (nullable = true)\n |    |    |    |-- expert: struct (nullable =\
+        \ true)\n |    |    |    |    |-- statement: string (nullable = true)\n |\
+        \    |    |    |    |-- status: boolean (nullable = true)\n |    |    |--\
+        \ resource_score: struct (nullable = true)\n |    |    |    |-- method: struct\
+        \ (nullable = true)\n |    |    |    |    |-- description: string (nullable\
+        \ = true)\n |    |    |    |-- type: string (nullable = true)\n |    |   \
+        \ |    |-- value: double (nullable = true)\n |    |    |-- urls: array (nullable\
+        \ = true)\n |    |    |    |-- element: struct (containsNull = true)\n | \
+        \   |    |    |    |-- nice_name: string (nullable = true)\n |    |    | \
+        \   |    |-- url: string (nullable = true)\n |    |-- is_associated: boolean\
+        \ (nullable = true)\n |    |-- known_mutations: array (nullable = true)\n\
+        \ |    |    |-- element: struct (containsNull = true)\n |    |    |    |--\
+        \ functional_consequence: string (nullable = true)\n |    |    |    |-- preferred_name:\
+        \ string (nullable = true)\n |    |-- provenance_type: struct (nullable =\
+        \ true)\n |    |    |-- database: struct (nullable = true)\n |    |    | \
+        \   |-- dbxref: struct (nullable = true)\n |    |    |    |    |-- id: string\
+        \ (nullable = true)\n |    |    |    |    |-- url: string (nullable = true)\n\
+        \ |    |    |    |    |-- version: string (nullable = true)\n |    |    |\
+        \    |-- id: string (nullable = true)\n |    |    |    |-- version: string\
+        \ (nullable = true)\n |    |    |-- expert: struct (nullable = true)\n | \
+        \   |    |    |-- statement: string (nullable = true)\n |    |    |    |--\
+        \ status: boolean (nullable = true)\n |    |    |-- literature: struct (nullable\
+        \ = true)\n |    |    |    |-- references: array (nullable = true)\n |   \
+        \ |    |    |    |-- element: struct (containsNull = true)\n |    |    | \
+        \   |    |    |-- lit_id: string (nullable = true)\n |    |-- resource_score:\
+        \ struct (nullable = true)\n |    |    |-- type: string (nullable = true)\n\
+        \ |    |    |-- value: long (nullable = true)\n |    |-- urls: array (nullable\
+        \ = true)\n |    |    |-- element: struct (containsNull = true)\n |    | \
+        \   |    |-- nice_name: string (nullable = true)\n |    |    |    |-- url:\
+        \ string (nullable = true)\n |    |-- variant2disease: struct (nullable =\
+        \ true)\n |    |    |-- clinical_significance: string (nullable = true)\n\
+        \ |    |    |-- date_asserted: string (nullable = true)\n |    |    |-- evidence_codes:\
+        \ array (nullable = true)\n |    |    |    |-- element: string (containsNull\
+        \ = true)\n |    |    |-- is_associated: boolean (nullable = true)\n |   \
+        \ |    |-- provenance_type: struct (nullable = true)\n |    |    |    |--\
+        \ database: struct (nullable = true)\n |    |    |    |    |-- dbxref: struct\
+        \ (nullable = true)\n |    |    |    |    |    |-- id: string (nullable =\
+        \ true)\n |    |    |    |    |    |-- url: string (nullable = true)\n | \
+        \   |    |    |    |    |-- version: string (nullable = true)\n |    |   \
+        \ |    |    |-- id: string (nullable = true)\n |    |    |    |    |-- version:\
+        \ string (nullable = true)\n |    |    |    |-- expert: struct (nullable =\
+        \ true)\n |    |    |    |    |-- statement: string (nullable = true)\n |\
+        \    |    |    |    |-- status: boolean (nullable = true)\n |    |    |  \
+        \  |-- literature: struct (nullable = true)\n |    |    |    |    |-- references:\
+        \ array (nullable = true)\n |    |    |    |    |    |-- element: struct (containsNull\
+        \ = true)\n |    |    |    |    |    |    |-- lit_id: string (nullable = true)\n\
+        \ |    |    |-- resource_score: struct (nullable = true)\n |    |    |   \
+        \ |-- method: struct (nullable = true)\n |    |    |    |    |-- description:\
+        \ string (nullable = true)\n |    |    |    |-- type: string (nullable = true)\n\
+        \ |    |    |    |-- value: double (nullable = true)\n |    |    |-- unique_experiment_reference:\
+        \ string (nullable = true)\n |    |    |-- urls: array (nullable = true)\n\
+        \ |    |    |    |-- element: struct (containsNull = true)\n |    |    | \
+        \   |    |-- nice_name: string (nullable = true)\n |    |    |    |    |--\
+        \ url: string (nullable = true)\n |-- literature: struct (nullable = true)\n\
+        \ |    |-- references: array (nullable = true)\n |    |    |-- element: struct\
+        \ (containsNull = true)\n |    |    |    |-- lit_id: string (nullable = true)\n\
+        \ |-- sourceID: string (nullable = true)\n |-- target: struct (nullable =\
+        \ true)\n |    |-- activity: string (nullable = true)\n |    |-- id: string\
+        \ (nullable = true)\n |    |-- target_type: string (nullable = true)\n |--\
+        \ type: string (nullable = true)\n |-- unique_association_fields: struct (nullable\
+        \ = true)\n |    |-- alleleOrigin: string (nullable = true)\n |    |-- clinvarAccession:\
+        \ string (nullable = true)\n |    |-- gene: string (nullable = true)\n | \
+        \   |-- phenotype: string (nullable = true)\n |    |-- variant_id: string\
+        \ (nullable = true)\n |-- validated_against_schema_version: string (nullable\
+        \ = true)\n |-- variant: struct (nullable = true)\n |    |-- id: string (nullable\
+        \ = true)\n |    |-- type: string (nullable = true)\n"
+    name: null
+    slug: eva
+    version: v20.06
+  resources:
+    parquet: gs://public-data-source/catalog/otpev/eva/v20.06/20200616T000000/data.parquet
+  source:
+    description: null
+    name: null
+    slug: otpev
+  storage:
+    bucket: public-data-source
+    project: target-ranking
+    root: catalog
+    scheme: gs
+    slug: gcs
