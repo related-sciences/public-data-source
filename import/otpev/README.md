@@ -1,5 +1,11 @@
 # OTG Integration in OTP
 
+This directory contains import and summary notebooks/scripts for the OTG data integrated into OTP.
+
+See [summary.ipynb](summary.ipynb) for details on fields and their interpretation.
+
+## Notes
+
 ### Summary 
 
 - There are 185,865 variant-trait associations in the GWAS catalog v1.0.2 assocations

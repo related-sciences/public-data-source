@@ -45,20 +45,23 @@ The typical flow for adding a new data source is:
 3. In another project that requires access to versioned datasets, use the catalog code to get urls for an artifact or explore those available, e.g.
 
 ```python
-import fsspec
 from data_source import catalog
 from pyspark.sql.session import SparkSession
 spark = SparkSession.builder.getOrCreate()
 
+# Load some catalog or merge multiple of them
 catalog_url = 'https://raw.githubusercontent.com/related-sciences/public-data-source/master/catalog.yaml'
+cat = catalog.load(catalog_url)
 
-# Un-nest catalog into tabular format
-df = catalog.load(catalog_url).to_pandas()
+# Select an artifact to donwload or get URLs for
+path = cat.download('clinvar', 'submission_summary', version='latest')
+# path = /tmp/data_source_cache/catalog/clinvar/submission_summary/v2020-06/20200601T000000/data.parquet
 
-# Select one of potentially several resources for the entry
-url = df.query('source_slug == "clinvar"')['resources_parquet'].iloc[0]
+# Alternatively, use the remote urls:
+# cat.find('clinvar', 'submission_summary')[0].url
+# gs://public-data-source/catalog/clinvar/submission_summary/v2020-06/20200601T000000/data.parquet
 
-df = spark.read.parquet(fsspec.open_local(f'simplecache::{url}'))
+df = spark.read.parquet(path)
 df.select('#VariationID', 'ClinicalSignificance', 'SubmittedPhenotypeInfo').show(5, 50)
 +------------+----------------------+--------------------------------------------------+
 |#VariationID|  ClinicalSignificance|                            SubmittedPhenotypeInfo|
