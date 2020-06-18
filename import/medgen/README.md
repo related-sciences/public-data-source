@@ -21,6 +21,7 @@ See https://ftp.ncbi.nlm.nih.gov/pub/medgen/README.txt for descriptions of csv t
 > Location: ftp://ftp.ncbi.nlm.nih.gov/pub/medgen/csv/
 > Description: The csv subdirectory contains a set of comma-separated files (csv) corresponding to the RRF files in the main path. Some of the files are split to allow loading into spreadsheet software (maximum 1,000,000 lines per file). The csv files also facilitate processing of the MGDEF.RRF file because the DEF column may contain internal line feeds.
 
+
 ### Relations
 
 MGREL files contain pairwise relations between concepts. Diseases and modes of inheritance are both MedGen concepts so associations between the two can be found by looking for specific rows in these files.
@@ -62,3 +63,29 @@ C0441748,AN0510081,AUI,RO,C3809672,AN1464764,has_inheritance_type,RN07702612,ORD
 ```
 
 `RELA` (relationship label) should be filtered to "has_inheritance_type" and `SAB` should be preserved so we know which sources provide evidence for a relation.
+
+#### MedGen Mapping
+
+To get HPO concepts in MedGen, use `MedGen_HPO_Mapping.txt.gz`:
+
+```bash
+> gzip -dc MedGen_HPO_Mapping.txt.gz | head
+#CUI|SDUI|HpoStr|MedGenStr|MedGenStr_SAB|STY|
+C0444868|HP:0000001|All|All|HPO|Quantitative Concept|
+C4025901|HP:0000002|Abnormality of body height|Abnormality of body height|GTR|Finding|
+C3714581|HP:0000003|Multicystic kidney dysplasia|Multicystic kidney dysplasia|GTR|Disease or Syndrome|
+C1708511|HP:0000005|Mode of inheritance|Mode of inheritance|HPO|Genetic Function|
+C0443147|HP:0000006|Autosomal dominant inheritance|Autosomal dominant inheritance|GTR|Intellectual Product|
+C0443147|HP:0000006|Autosomal dominant inheritance|Autosomal dominant inheritance|GTR|Genetic Function|
+C0441748|HP:0000007|Autosomal recessive inheritance|Autosomal recessive inheritance|HPO|Intellectual Product|
+C0441748|HP:0000007|Autosomal recessive inheritance|Autosomal recessive inheritance|HPO|Genetic Function|
+C4025900|HP:0000008|Abnormality of female internal genitalia|Abnormality of female internal genitalia|GTR|Anatomical Abnormality|
+```
+
+#### ClinVar Mapping
+
+The steps then for assign modes of inheritance to ClinVar records is:
+
+- Choose a set of HPO term ids corresponding to groups of inheritance modes (recessive/dominant)
+- Find the corresponding MedGen concept ids
+- Given a MedGen concept id for a disease on a ClinVar record, look for `has_inheritance_type` relation in `MGREL` for disease and matching concepts above
