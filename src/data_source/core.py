@@ -249,6 +249,8 @@ class Entry(BaseModel):
             shutil.rmtree(path)
         if path.exists():
             return str(path)
+        if not path.parent.exists():
+            path.parent.mkdir(parents=True)
         self.fs.download(url, path, recursive=self.fs.isdir(url))
         return str(path)
 
