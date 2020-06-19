@@ -8,30 +8,36 @@ import os
 from . import ENV_CATALOG_PATH
 from .core import Entry, Catalog, Storage, DEFAULT_STORAGE
 import logging
+
 logger = logging.getLogger(__name__)
 
 PathType = Union[str, Path]
+
 
 def default_urlpath() -> str:
     urlpath = os.getenv(ENV_CATALOG_PATH)
     if not urlpath:
         raise ValueError(
-            'Catalog must be provided explicitly or '
+            "Catalog must be provided explicitly or "
             f'set using environment variable "{ENV_CATALOG_PATH}"'
         )
     return urlpath
+
 
 def _check_urlpath(urlpath: Optional[PathType] = None) -> str:
     if urlpath:
         return str(urlpath)
     return default_urlpath()
 
+
 def merge(catalogs: Sequence[Catalog]) -> Catalog:
     return functools.reduce(lambda x, y: x.merge(y), catalogs)
+
 
 def empty() -> Catalog:
     """Create empty `Catalog` instance"""
     return Catalog(entries=[])
+
 
 def load(urlpath: Optional[PathType] = None) -> Catalog:
     """Load catalog from url or path
@@ -43,12 +49,13 @@ def load(urlpath: Optional[PathType] = None) -> Catalog:
         variable 'CATALOG_PATH'
     """
     urlpath = _check_urlpath(urlpath)
-    of = fsspec.open(urlpath, mode='r')
+    of = fsspec.open(urlpath, mode="r")
     if not of.fs.exists(urlpath):
         return empty()
     with of.open() as f:
         obj = yaml.load(f, Loader=yaml.FullLoader)
         return Catalog(**obj)
+
 
 def add_entry(entry: Entry, urlpath: Optional[PathType] = None, overwrite=False):
     """Add an entry to a pre-existing catalog
@@ -91,7 +98,7 @@ def save(catalog: Catalog, urlpath: Optional[PathType] = None):
     """
     urlpath = _check_urlpath(urlpath)
     logger.info('Saving catalog to path "%s"', urlpath)
-    of = fsspec.open(urlpath, mode='w')
+    of = fsspec.open(urlpath, mode="w")
     with of.open() as f:
         yaml.dump(catalog.dict(), f)
 
@@ -106,7 +113,7 @@ def create_entry(
     created: Optional[datetime] = None,
     metadata: Optional[dict] = None,
     properties: Optional[dict] = None,
-    storage: Storage=DEFAULT_STORAGE
+    storage: Storage = DEFAULT_STORAGE,
 ):
     """Create new catalog entry
 
@@ -176,14 +183,16 @@ def create_entry(
     """
     if created is None:
         created = datetime.combine(date.today(), datetime.min.time())
-    return Entry(**dict(
-        source=dict(slug=source) if isinstance(source, str) else source,
-        artifact=dict(
-            slug=slug,
-            version=version,
-            created=created,
-            metadata=metadata,
-            formats=[dict(name=format, type=type, properties=properties)]
-        ),
-        storage=storage
-    ))
+    return Entry(
+        **dict(
+            source=dict(slug=source) if isinstance(source, str) else source,
+            artifact=dict(
+                slug=slug,
+                version=version,
+                created=created,
+                metadata=metadata,
+                formats=[dict(name=format, type=type, properties=properties)],
+            ),
+            storage=storage,
+        )
+    )
