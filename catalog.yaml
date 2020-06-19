@@ -703,3 +703,34 @@ entries:
     root: catalog
     scheme: gs
     slug: gcs
+- artifact:
+    created: 2020-06-01 00:00:00
+    filename: data
+    formats:
+    - default: true
+      name: parquet
+      properties: null
+      type: directory
+    metadata:
+      nrow: 1555604
+      schema: "root\n |-- _c0: string (nullable = true)\n |-- _c1: string (nullable\
+        \ = true)\n |-- _c2: string (nullable = true)\n |-- _c3: string (nullable\
+        \ = true)\n |-- _c4: string (nullable = true)\n |-- _c5: string (nullable\
+        \ = true)\n |-- _c6: string (nullable = true)\n |-- _c7: string (nullable\
+        \ = true)\n |-- _c8: string (nullable = true)\n |-- _c9: string (nullable\
+        \ = true)\n |-- _c10: string (nullable = true)\n"
+    name: null
+    slug: mgrel
+    version: v2020-06
+  resources:
+    parquet: gs://public-data-source/catalog/medgen/mgrel/v2020-06/20200601T000000/data.parquet
+  source:
+    description: null
+    name: null
+    slug: medgen
+  storage:
+    bucket: public-data-source
+    project: target-ranking
+    root: catalog
+    scheme: gs
+    slug: gcs

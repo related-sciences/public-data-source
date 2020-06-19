@@ -1,2 +1,5 @@
 pytest
 hypothesis
+black
+mypy
+flake8
