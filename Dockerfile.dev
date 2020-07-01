@@ -44,4 +44,6 @@ RUN chmod a+rx /usr/local/bin/fire-dotenv
 
 USER $NB_UID
 
+ENV PYLINTRC="$WORK_DIR/repos/public-data-source/.pylintrc"
+
 CMD ["start-all.sh"]
