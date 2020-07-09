@@ -1,0 +1,10 @@
+fire==0.3.1
+fsspec==0.7.4
+gcsfs==0.6.2
+openpyxl==3.0.4
+pandas
+prefect==0.11.2
+pyarrow
+pydantic==1.5.1
+python-dotenv==0.13.0
+python-graphviz==0.14

@@ -1,0 +1,6 @@
+black==19.10b0
+flake8==3.8.3
+hypothesis==5.19.0
+mypy==0.782
+pylint==2.5.3
+pytest==5.4.3

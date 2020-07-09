@@ -1,10 +1,9 @@
 ARG BASE_CONTAINER=public-data-source
 FROM $BASE_CONTAINER
 
-COPY requirements-dev.txt requirements-test.txt /tmp/
+COPY requirements-conda-dev.txt /tmp/
 RUN conda install --yes \
-    --file /tmp/requirements-dev.txt \
-    --file /tmp/requirements-test.txt && \
+    --file /tmp/requirements-conda-dev.txt && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
@@ -15,11 +14,13 @@ USER root
 
 # VS code-server install
 RUN cd /opt \
-  && wget -q https://github.com/cdr/code-server/releases/download/3.2.0/code-server-3.2.0-linux-x86_64.tar.gz \
-  && tar -xf code-server-3.2.0-linux-x86_64.tar.gz \
-  && rm code-server-3.2.0-linux-x86_64.tar.gz \
-  && chmod a+x code-server-3.2.0-linux-x86_64/code-server \
-  && ln -s /opt/code-server-3.2.0-linux-x86_64/code-server /usr/local/bin/code-server \
+  && wget --quiet --output-document=code-server.tar.gz \
+     https://github.com/cdr/code-server/releases/download/v3.4.1/code-server-3.4.1-linux-amd64.tar.gz \
+  && mkdir code-server \
+  && tar --extract --file=code-server.tar.gz --directory=code-server --strip-components=1  \
+  && rm code-server.tar.gz \
+  && chmod a+x code-server/bin/code-server \
+  && ln --symbolic /opt/code-server/bin/code-server /usr/local/bin/code-server \
   && code-server --install-extension ms-python.python \
   && code-server --install-extension njpwerner.autodocstring \
   && code-server --install-extension bungcip.better-toml

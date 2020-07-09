@@ -21,8 +21,8 @@ WORK_DIR=/home/jovyan/work
 # but both jupyterlab and vscode server will run as non-root users
 docker run --rm --tty --interactive \
   --env GRANT_SUDO=yes --user=root \
-  --volume "$HOME/.rs_auth:$WORK_DIR/auth" \
   --env NB_UID=$(id -u) \
+  --mount "type=bind,source=$HOME/.rs_auth,target=$WORK_DIR/auth" \
   --mount "type=bind,source=$(pwd),target=$WORK_DIR/repos/public-data-source" \
   --publish 8888:8888 --publish 8887:8887 \
   --env JUPYTER_TOKEN=RmiTyPOSpedGeYERYOnymerj \
