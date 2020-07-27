@@ -1,13 +1,18 @@
-from datetime import datetime, date
-from typing import Optional, Union, Sequence
-from pathlib import Path
+# TODO: finish typing
+# type: ignore
+
 import functools
-import yaml
-import fsspec
-import os
-from . import ENV_CATALOG_PATH
-from .core import Entry, Catalog, Storage, DEFAULT_STORAGE
 import logging
+import os
+from datetime import date, datetime
+from pathlib import Path
+from typing import Optional, Sequence, Union
+
+import fsspec
+import yaml
+
+from . import ENV_CATALOG_PATH
+from .core import DEFAULT_STORAGE, Catalog, Entry, Storage
 
 logger = logging.getLogger(__name__)
 

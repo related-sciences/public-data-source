@@ -46,6 +46,3 @@ See all possible HPO modes of inheritance at https://hpo.jax.org/app/browse/term
 In OLS, it is much easier to see the HPO tree from here: https://www.ebi.ac.uk/ols/ontologies/hp/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FHP_0000005&viewMode=All&siblings=true
 
 ![ols_hpo_moi](image/ols_hpo_moi.png)
-
-
-

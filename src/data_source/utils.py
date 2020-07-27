@@ -1,7 +1,5 @@
 import io
-import fsspec
-from pathlib import Path
-from typing import Optional
+
 from pandas import DataFrame
 
 

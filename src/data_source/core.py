@@ -1,20 +1,23 @@
+# TODO: finish typing
+# type: ignore
+
 from __future__ import annotations
-from . import ENV_GCS_BUCKET, ENV_GCS_PROJECT, ENV_GCS_ROOT
-from . import utils
-from pydantic import (
-    BaseModel,
-    BaseSettings,
-    Field,
-    validator,
-)  # pylint:disable=no-name-in-module
-from enum import Enum
-from datetime import datetime
-from typing import Optional, List, Mapping, Hashable, Any
-from collections import namedtuple
-from pathlib import Path
-import shutil
+
 import os
 import re
+import shutil
+from collections import namedtuple
+from datetime import datetime
+from pathlib import Path
+from typing import List, Mapping, Optional
+
+from pydantic import (  # pylint:disable=no-name-in-module
+    BaseModel,
+    BaseSettings,
+    validator,
+)
+
+from . import ENV_GCS_BUCKET, ENV_GCS_PROJECT, ENV_GCS_ROOT
 
 IS_SLUG_REGEX = r"^[A-Za-z0-9_]+$"
 IS_SLUG = re.compile(IS_SLUG_REGEX)
@@ -128,7 +131,7 @@ class Storage(BaseSettings):
 
 
 def _default_storage():
-    if not ENV_GCS_BUCKET in os.environ or not os.environ[ENV_GCS_BUCKET]:
+    if ENV_GCS_BUCKET not in os.environ or not os.environ[ENV_GCS_BUCKET]:
         raise ValueError(
             "Default storage parameters not set in environment "
             f"(must set {ENV_GCS_BUCKET}, {ENV_GCS_PROJECT} and {ENV_GCS_ROOT})."
@@ -304,7 +307,7 @@ class Catalog(BaseModel):
 
     def remove(self, entry: Entry) -> bool:
         """Remove an entry
-        
+
         Returns
         -------
         bool
@@ -317,7 +320,7 @@ class Catalog(BaseModel):
 
     def to_pandas(self, dropna=True):
         """Convert to un-nested pandas dataframe
-        
+
         Note that individual entry objects are preserved in the `entry` column
         """
         import pandas as pd

@@ -1,26 +1,35 @@
+# TODO: finish typing
+# type: ignore
+
 """ClinVar integration script"""
+from pathlib import Path
+
 import fire
 import fsspec
 import pandas as pd
-from datetime import datetime
-from pathlib import Path
-from prefect import task, context, Flow, Parameter, Task
-from prefect.engine.results import LocalResult
-from data_source.prefect.tasks import constant
 from data_source import catalog
-from data_source.utils import get_df_info
 from data_source.core import entry_key_str
+from data_source.prefect.tasks import constant
+from data_source.utils import get_df_info
+from prefect import Flow, task
+from prefect.engine.results import LocalResult
 
-#pylint: disable=no-value-for-parameter
-@task(target="{flow_name}/{task_name}", checkpoint=True, result=LocalResult(dir="~/.prefect"))
+
+# pylint: disable=no-value-for-parameter
+@task(
+    target="{flow_name}/{task_name}",
+    checkpoint=True,
+    result=LocalResult(dir="~/.prefect"),
+)
 def download(url, csv_path):
     of = fsspec.open(url)
     of.fs.download(url, csv_path)
     return csv_path
 
+
 @task
 def convert_to_parquet(input_path, output_path):
-    df = pd.read_csv(input_path, skiprows=15, sep='\t')
+    df = pd.read_csv(input_path, skiprows=15, sep="\t")
     info = get_df_info(df)
     nrow = len(df)
     df.to_parquet(output_path)
@@ -32,29 +41,31 @@ def upload(entry, parquet_path, url):
     entry.fs.upload(parquet_path, url)
     return True
 
+
 @task
 def add_entry(entry, info, catalog_path):
-    entry.artifact.metadata=dict(info=info['info'], nrow=info['nrow'])
+    entry.artifact.metadata = dict(info=info["info"], nrow=info["nrow"])
     catalog.add_entry(entry, urlpath=catalog_path, overwrite=True)
 
 
 def get_entry(version, created):
     dt = pd.to_datetime(created).to_pydatetime()
     return catalog.create_entry(
-        source='clinvar', 
-        slug='submission_summary',
+        source="clinvar",
+        slug="submission_summary",
         version=version,
         created=dt,
-        format='parquet',
-        type='file'
+        format="parquet",
+        type="file",
     )
 
+
 def flow(
-    output_dir: str='/tmp/clinvar', 
-    raw_url: str='https://ftp.ncbi.nlm.nih.gov/pub/clinvar/tab_delimited/archive/submission_summary_2020-06.txt.gz'
+    output_dir: str = "/tmp/clinvar",
+    raw_url: str = "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/tab_delimited/archive/submission_summary_2020-06.txt.gz",
 ) -> Flow:
     """Get ClinVar submission summary import flow
-    
+
     Parameters
     ----------
     output_dir : str
@@ -71,10 +82,10 @@ def flow(
     Flow
         Prefect Flow
     """
-    created = raw_url.split('/')[-1].split('_')[-1].split('.')[0]
+    created = raw_url.split("/")[-1].split("_")[-1].split(".")[0]
     if not created:
         raise ValueError('Unable to determine archive date from url "{raw_url}"')
-    version = f'v{created}'
+    version = f"v{created}"
 
     output_dir = Path(output_dir)
     if not output_dir.exists():
@@ -82,17 +93,23 @@ def flow(
 
     entry = get_entry(version, created)
     catalog_path = catalog.default_urlpath()
-    filename = raw_url.split('/')[-1]
+    filename = raw_url.split("/")[-1]
 
-    with Flow(f'clinvar-{version}') as flow:
+    with Flow(f"clinvar-{version}") as flow:
         # Add constants with important to DAG (all others are not visualized)
-        catalog_path = constant(catalog_path, name='catalog_path')
-        url = constant(entry.resources['parquet'], name='url') # pylint:disable=unsubscriptable-object
-        entry = constant(entry, name=f'entry.key={entry_key_str(entry.key)}', value=False)
+        catalog_path = constant(catalog_path, name="catalog_path")
+        url = constant(
+            entry.resources["parquet"], name="url"
+        )  # pylint:disable=unsubscriptable-object
+        entry = constant(
+            entry, name=f"entry.key={entry_key_str(entry.key)}", value=False
+        )
 
         # Download and convert to parquet
-        csv_path = constant(str(output_dir / filename), name='csv_path')
-        parquet_path = constant(str(output_dir / filename.split('.')[0]) + '.parquet', name='parquet_path')
+        csv_path = constant(str(output_dir / filename), name="csv_path")
+        parquet_path = constant(
+            str(output_dir / filename.split(".")[0]) + ".parquet", name="parquet_path"
+        )
         csv_path = download(raw_url, csv_path)
         info = convert_to_parquet(csv_path, parquet_path)
 
@@ -103,5 +120,5 @@ def flow(
         return flow
 
 
-if __name__ == '__main__':
-    fire.Fire({'flow': flow})
+if __name__ == "__main__":
+    fire.Fire({"flow": flow})
