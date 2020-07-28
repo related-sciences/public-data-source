@@ -734,3 +734,51 @@ entries:
     root: catalog
     scheme: gs
     slug: gcs
+- artifact:
+    created: 2020-07-28 16:49:22.839928
+    filename: data
+    formats:
+    - default: true
+      name: parquet
+      properties: null
+      type: directory
+    metadata:
+      nrow: 189811
+      schema: "root\n |-- date_added_to_catalog: string (nullable = true)\n |-- pubmedid:\
+        \ string (nullable = true)\n |-- first_author: string (nullable = true)\n\
+        \ |-- date: string (nullable = true)\n |-- journal: string (nullable = true)\n\
+        \ |-- link: string (nullable = true)\n |-- study: string (nullable = true)\n\
+        \ |-- disease_trait: string (nullable = true)\n |-- initial_sample_size: string\
+        \ (nullable = true)\n |-- replication_sample_size: string (nullable = true)\n\
+        \ |-- region: string (nullable = true)\n |-- chr_id: string (nullable = true)\n\
+        \ |-- chr_pos: string (nullable = true)\n |-- reported_gene_s: string (nullable\
+        \ = true)\n |-- mapped_gene: string (nullable = true)\n |-- upstream_gene_id:\
+        \ string (nullable = true)\n |-- downstream_gene_id: string (nullable = true)\n\
+        \ |-- snp_gene_ids: string (nullable = true)\n |-- upstream_gene_distance:\
+        \ string (nullable = true)\n |-- downstream_gene_distance: string (nullable\
+        \ = true)\n |-- strongest_snp_risk_allele: string (nullable = true)\n |--\
+        \ snps: string (nullable = true)\n |-- merged: string (nullable = true)\n\
+        \ |-- snp_id_current: string (nullable = true)\n |-- context: string (nullable\
+        \ = true)\n |-- intergenic: string (nullable = true)\n |-- risk_allele_frequency:\
+        \ string (nullable = true)\n |-- p_value: string (nullable = true)\n |-- pvalue_mlog:\
+        \ string (nullable = true)\n |-- p_value_text: string (nullable = true)\n\
+        \ |-- or_or_beta: string (nullable = true)\n |-- 95_ci_text: string (nullable\
+        \ = true)\n |-- platform_snps_passing_qc: string (nullable = true)\n |-- cnv:\
+        \ string (nullable = true)\n |-- mapped_trait: string (nullable = true)\n\
+        \ |-- mapped_trait_uri: string (nullable = true)\n |-- study_accession: string\
+        \ (nullable = true)\n |-- genotyping_technology: string (nullable = true)\n"
+    name: null
+    slug: gwas_catalog
+    version: v2020-07-28
+  resources:
+    parquet: gs://public-data-source/catalog/gwas_catalog/gwas_catalog/v2020-07-28/20200728T164922/data.parquet
+  source:
+    description: null
+    name: null
+    slug: gwas_catalog
+  storage:
+    bucket: public-data-source
+    project: target-ranking
+    root: catalog
+    scheme: gs
+    slug: gcs
